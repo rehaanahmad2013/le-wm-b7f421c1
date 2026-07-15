@@ -199,7 +199,10 @@ def analyze_offline(environment: str, policy: str) -> None:
 
     spec = DATASETS[environment]
     cfg = OmegaConf.load(ROOT / "config" / "train" / "data" / f"{spec['train_config']}.yaml")
-    dataset_cfg = OmegaConf.to_container(cfg.dataset, resolve=True)
+    # This fragment references root-level Hydra keys that are absent when it
+    # is loaded alone. Materialize it unresolved, then set the explicit paper
+    # sequence length below.
+    dataset_cfg = OmegaConf.to_container(cfg.dataset, resolve=False)
     dataset_name = dataset_cfg.pop("name")
     dataset_cfg["num_steps"] = int(CFG["history_size"]) + 1
     dataset = swm.data.load_dataset(dataset_name, **dataset_cfg)

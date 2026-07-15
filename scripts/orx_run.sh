@@ -9,7 +9,7 @@ apt-get install -y -qq --no-install-recommends \
   libegl1 libx11-6 libxext6 libxrender1 ffmpeg >/dev/null
 
 python -m pip install --disable-pip-version-check --quiet \
-  'numpy==1.26.4' 'pyarrow>=14,<20' \
+  'numpy==1.26.4' \
   'stable-worldmodel[train,format]==0.1.1' \
   'stable-pretraining==0.1.8' \
   'transformers>=4.50,<5' \
