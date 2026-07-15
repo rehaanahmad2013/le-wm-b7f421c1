@@ -1,8 +1,8 @@
 {
-  "name": "pusht-train-10ep-seed3072",
+  "name": "pusht-10ep-seed-42",
   "mode": "train",
   "environment": "pusht",
-  "seed": 3072,
+  "seed": 42,
   "eval_seed": 42,
   "epochs": 10,
   "history_size": 3,
