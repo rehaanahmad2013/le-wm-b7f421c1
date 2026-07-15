@@ -2,6 +2,21 @@
 # LeWorldModel
 ### Stable End-to-End Joint-Embedding Predictive Architecture from Pixels
 
+[![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/rehaanahmad2013/le-wm-b7f421c1/blob/main/claim_tutorial.py)
+
+## Reproduction tutorial
+
+The self-contained [interactive marimo notebook](claim_tutorial.py) reproduces the paper's headline PushT result: **48/50 goals = 96%**, exactly matching the reported 96% for the released LeWM checkpoint. It also explains why prediction loss alone can hide representation collapse and includes an opt-in, bounded GPU teaching lab for Molab's RTX PRO 6000. The lab is clearly separated from the formal reproduction evidence.
+
+### Experiment log
+
+| Experiment | Change and outcome |
+|---|---|
+| [Confirmatory PushT reproduction code](https://github.com/rehaanahmad2013/le-wm-b7f421c1/tree/orx/released-pusht-paper-seed-reference) | Fixed paper-seed evaluation, author checkpoint, 50 reachable goals, CEM configuration, k8s manifest, and diagnostics. Reproduced **96%** exactly. |
+| [Prediction-only collapse control](https://github.com/rehaanahmad2013/le-wm-b7f421c1/tree/orx/pusht-lambda-0-0-collapse-control) | Removed SIGReg while keeping the runner and training setup fixed. Prediction error fell 37,124× while the latent Gaussianity diagnostic remained poor. |
+| [Regularized training comparison](https://github.com/rehaanahmad2013/le-wm-b7f421c1/tree/orx/pusht-lambda-0-05) | Set SIGReg weight to 0.05. Seven completed checkpoints remained non-collapsed and reached 0.00302 validation prediction loss. |
+| [Validated Molab GPU teaching lab](https://github.com/rehaanahmad2013/le-wm-b7f421c1/tree/orx/molab-gpu-lab-validated-variance-surrogate) | Contains the compact synthetic runner, fixed configuration, one-GPU manifest, and evaluation metrics. Validated in **19.63 s** on an RTX PRO 6000; this is teaching-only, not reproduction evidence. |
+
 [Lucas Maes*](https://x.com/lucasmaes_), [Quentin Le Lidec*](https://quentinll.github.io/), [Damien Scieur](https://scholar.google.com/citations?user=hNscQzgAAAAJ&hl=fr), [Yann LeCun](https://yann.lecun.com/) and [Randall Balestriero](https://randallbalestriero.github.io/)
 
 **Abstract:** Joint Embedding Predictive Architectures (JEPAs) offer a compelling framework for learning world models in compact latent spaces, yet existing methods remain fragile, relying on complex multi-term losses, exponential moving averages, pretrained encoders, or auxiliary supervision to avoid representation collapse. In this work, we introduce LeWorldModel (LeWM), the first JEPA that trains stably end-to-end from raw pixels using only two loss terms: a next-embedding prediction loss and a regularizer enforcing Gaussian-distributed latent embeddings. This reduces tunable loss hyperparameters from six to one compared to the only existing end-to-end alternative. With ~15M parameters trainable on a single GPU in a few hours, LeWM plans up to 48× faster than foundation-model-based world models while remaining competitive across diverse 2D and 3D control tasks. Beyond control, we show that LeWM's latent space encodes meaningful physical structure through probing of physical quantities. Surprise evaluation confirms that the model reliably detects physically implausible events.
