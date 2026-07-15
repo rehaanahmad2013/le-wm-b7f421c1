@@ -185,7 +185,7 @@ def collapse_trajectory_figure(metrics: dict, output: Path) -> None:
 
 
 def convergence_figure(metrics: dict, output: Path) -> None:
-    snapshot = metrics["four_epoch_training_snapshot"]
+    snapshot = metrics["five_epoch_training_snapshot"]
     specs = [
         ("seed", "Random seed"),
         ("sigreg_weight", "SIGReg weight λ"),
@@ -196,7 +196,7 @@ def convergence_figure(metrics: dict, output: Path) -> None:
         for label, values in snapshot[key].items():
             epochs = np.arange(1, len(values) + 1)
             ax.plot(epochs, values, marker="o", linewidth=2, label=label)
-        ax.set(xticks=[1, 2, 3, 4], xlabel="Completed epoch", title=title, yscale="log")
+        ax.set(xticks=[1, 2, 3, 4, 5], xlabel="Completed epoch", title=title, yscale="log")
         ax.grid(color="#dedbd4", linewidth=0.7)
         ax.legend(frameon=False, fontsize=8, title=title)
     axes[0].set_ylabel("Validation prediction loss (log scale)")
