@@ -1,0 +1,15 @@
+{
+  "name": "released-pusht-reference",
+  "mode": "released",
+  "environment": "pusht",
+  "seed": 3072,
+  "epochs": 0,
+  "history_size": 3,
+  "sigreg_weight": 0.09,
+  "predictor_dropout": 0.1,
+  "cem_steps": 30,
+  "num_eval": 50,
+  "probe_samples": 8192,
+  "run_control": true,
+  "run_diagnostics": true
+}

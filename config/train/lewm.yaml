@@ -15,8 +15,10 @@ embed_dim: 192
 history_size: 3
 
 trainer:
-  max_epochs: 100
-  devices: auto
+  # The paper trains for 10 epochs. The released repository originally said
+  # 100; that disagreement is retained as an explicit experiment variant.
+  max_epochs: 10
+  devices: 1
   accelerator: gpu
   precision: bf16
   gradient_clip_val: 1.0
@@ -41,3 +43,13 @@ loss:
     kwargs:
       knots: 17
       num_proj: 1024
+
+wandb:
+  enabled: false
+  config:
+    entity: lewm-reproduction
+    project: lewm-reproduction
+    name: ${output_model_name}
+    id: ${subdir}
+    resume: allow
+    log_model: false
