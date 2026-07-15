@@ -181,7 +181,7 @@ def train(environment: str) -> str:
     return checkpoint
 
 
-def analyze_offline(environment: str, policy: str) -> None:
+def analyze_offline(environment: str, policy: str, dataset_path: Path) -> None:
     """Measure latent health, probes, and matched visual/continuity surprise."""
     import numpy as np
     import torch
@@ -203,9 +203,12 @@ def analyze_offline(environment: str, policy: str) -> None:
     # num_steps interpolation cannot see top-level num_preds/history_size.
     # Replace it before asking OmegaConf for plain values.
     dataset_cfg = OmegaConf.to_container(cfg.dataset, resolve=False)
-    dataset_name = dataset_cfg.pop("name")
+    dataset_cfg.pop("name")
     dataset_cfg["num_steps"] = int(CFG["history_size"]) + 1
-    dataset = swm.data.load_dataset(dataset_name, **dataset_cfg)
+    # Always consume the artifact prepared and checksum-verified by this run.
+    # Nested datasets such as ogbench/cube_single_expert.h5 otherwise look like
+    # Hugging Face repo IDs to stable-worldmodel's resolver.
+    dataset = swm.data.load_dataset(str(dataset_path), **dataset_cfg)
     transforms = [get_img_preprocessor("pixels", "pixels", 224)]
     for col in cfg.dataset.keys_to_load:
         if not col.startswith("pixels"):
@@ -306,7 +309,7 @@ def main() -> None:
         raise ValueError(f"Unknown mode: {CFG['mode']}")
 
     if CFG.get("run_diagnostics", True):
-        analyze_offline(environment, policy)
+        analyze_offline(environment, policy, dataset)
     if CFG.get("run_control", True):
         evaluate_control(environment, policy)
     emit("complete", name=CFG["name"], environment=environment, mode=CFG["mode"], seed=CFG["seed"])
