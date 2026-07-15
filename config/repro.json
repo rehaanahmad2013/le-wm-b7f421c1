@@ -1,16 +1,13 @@
 {
-  "name": "released-reacher-corrected-checksum",
-  "mode": "released",
-  "environment": "reacher",
+  "name": "molab-gpu-collapse-lab-validation",
+  "mode": "molab_gpu_lab",
+  "environment": "pusht",
   "seed": 3072,
-  "eval_seed": 42,
-  "epochs": 0,
-  "history_size": 3,
-  "sigreg_weight": 0.09,
-  "predictor_dropout": 0.1,
-  "cem_steps": 10,
-  "num_eval": 50,
-  "probe_samples": 8192,
-  "run_control": true,
-  "run_diagnostics": true
+  "lab_lambda": 0.08,
+  "lab_steps": 240,
+  "lab_batch_size": 256,
+  "lab_image_size": 64,
+  "lab_latent_dim": 64,
+  "run_control": false,
+  "run_diagnostics": false
 }

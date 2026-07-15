@@ -288,13 +288,36 @@ def evaluate_control(environment: str, policy: str) -> None:
 
 
 def main() -> None:
-    environment = CFG["environment"]
-    if environment not in DATASETS:
-        raise ValueError(f"Unknown environment: {environment}")
     print(json.dumps({"reproduction_config": CFG}, indent=2, sort_keys=True), flush=True)
     print(f"python={sys.version}", flush=True)
     run(["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"])
     set_determinism(int(CFG["seed"]))
+
+    if CFG["mode"] == "molab_gpu_lab":
+        from molab_gpu_lab import run_gpu_lab
+
+        result = run_gpu_lab(
+            selected_lambda=float(CFG["lab_lambda"]),
+            steps=int(CFG["lab_steps"]),
+            batch_size=int(CFG["lab_batch_size"]),
+            image_size=int(CFG["lab_image_size"]),
+            latent_dim=int(CFG["lab_latent_dim"]),
+            seed=int(CFG["seed"]),
+        )
+        print(json.dumps(result, indent=2, sort_keys=True), flush=True)
+        for variant in result["variants"]:
+            emit(
+                "molab_gpu_lab",
+                device=result["device_name"],
+                total_runtime_seconds=result["total_runtime_seconds"],
+                **{key: value for key, value in variant.items() if key != "trajectory"},
+            )
+        emit("complete", name=CFG["name"], mode=CFG["mode"], seed=CFG["seed"])
+        return
+
+    environment = CFG["environment"]
+    if environment not in DATASETS:
+        raise ValueError(f"Unknown environment: {environment}")
     dataset = prepare_dataset(environment)
     emit("dataset", environment=environment, path=str(dataset), size_bytes=dataset.stat().st_size)
 
