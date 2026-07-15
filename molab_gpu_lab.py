@@ -16,7 +16,7 @@ import time
 
 def run_gpu_lab(
     selected_lambda: float = 0.08,
-    steps: int = 240,
+    steps: int = 1200,
     batch_size: int = 256,
     image_size: int = 64,
     latent_dim: int = 64,
@@ -98,11 +98,20 @@ def run_gpu_lab(
 
     def gaussian_projection_loss(z):
         projected = z @ projections.T
+        projected_mean = projected.mean(0)
+        projected_std = projected.std(0, correction=0)
+        # The characteristic-function statistic alone becomes too flat near a
+        # constant embedding in this tiny workload.  A smooth projected
+        # standard-deviation floor supplies the anti-collapse gradient that the
+        # full SIGReg test provides at paper scale.
+        variance_floor = F.relu(0.9 - projected_std).square().mean()
+        moment_loss = projected_mean.square().mean() + (projected_std - 1.0).square().mean()
         angles = projected[:, :, None] * frequencies
         real = torch.cos(angles).mean(0)
         imag = torch.sin(angles).mean(0)
         target = torch.exp(-0.5 * frequencies.square())[None, :]
-        return (real - target).square().mean() + imag.square().mean()
+        characteristic_loss = (real - target).square().mean() + imag.square().mean()
+        return characteristic_loss + moment_loss + 4.0 * variance_floor
 
     @torch.no_grad()
     def evaluate(encoder, predictor):
@@ -188,7 +197,7 @@ def run_gpu_lab(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selected-lambda", type=float, default=0.08)
-    parser.add_argument("--steps", type=int, default=240)
+    parser.add_argument("--steps", type=int, default=1200)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--image-size", type=int, default=64)
     parser.add_argument("--latent-dim", type=int, default=64)

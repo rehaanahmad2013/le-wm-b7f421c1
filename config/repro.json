@@ -4,7 +4,7 @@
   "environment": "pusht",
   "seed": 3072,
   "lab_lambda": 0.08,
-  "lab_steps": 240,
+  "lab_steps": 1200,
   "lab_batch_size": 256,
   "lab_image_size": 64,
   "lab_latent_dim": 64,
