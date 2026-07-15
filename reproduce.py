@@ -199,7 +199,10 @@ def analyze_offline(environment: str, policy: str) -> None:
 
     spec = DATASETS[environment]
     cfg = OmegaConf.load(ROOT / "config" / "train" / "data" / f"{spec['train_config']}.yaml")
-    dataset_cfg = OmegaConf.to_container(cfg.dataset, resolve=True)
+    # This file is loaded outside the full Hydra training tree, so its
+    # num_steps interpolation cannot see top-level num_preds/history_size.
+    # Replace it before asking OmegaConf for plain values.
+    dataset_cfg = OmegaConf.to_container(cfg.dataset, resolve=False)
     dataset_name = dataset_cfg.pop("name")
     dataset_cfg["num_steps"] = int(CFG["history_size"]) + 1
     dataset = swm.data.load_dataset(dataset_name, **dataset_cfg)
