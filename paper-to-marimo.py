@@ -127,6 +127,58 @@ def _(mo):
 
 
 @app.cell
+def _(alt, mo, pd):
+    trajectories = {
+        "Random seed": {
+            "3072": [0.0250648, 0.0134171, 0.00925220, 0.00772082],
+            "123": [0.0244867, 0.0133568, 0.00993717, 0.00767666],
+            "42": [0.0280995, 0.0130376, 0.00890300, 0.00745580],
+        },
+        "SIGReg weight": {
+            "0.05": [0.0161022, 0.00923039, 0.00642990, 0.00538097],
+            "0.09": [0.0250648, 0.0134171, 0.00925220, 0.00772082],
+            "0.10": [0.0251537, 0.0141873, 0.00969312, 0.00797197],
+            "0.20": [0.0655181, 0.0206285, 0.0155480, 0.0116433],
+            "0.50": [0.156785, 0.0566378, 0.0394593, 0.0292177],
+        },
+        "Predictor dropout": {
+            "0.0": [0.0220167, 0.0121709, 0.00929167, 0.00717766],
+            "0.1": [0.0250648, 0.0134171, 0.00925220, 0.00772082],
+            "0.2": [0.0258967, 0.0145559, 0.00962948, 0.00793779],
+            "0.5": [0.0244672, 0.0153039, 0.0112242, 0.00953380],
+        },
+    }
+    training_rows = [
+        {"sweep": sweep, "variant": variant, "epoch": epoch, "prediction_loss": value}
+        for sweep, variants in trajectories.items()
+        for variant, values in variants.items()
+        for epoch, value in enumerate(values, start=1)
+    ]
+    training_progress = pd.DataFrame(training_rows)
+    progress_chart = (
+        alt.Chart(training_progress)
+        .mark_line(point=True)
+        .encode(
+            x=alt.X("epoch:Q", title="Completed epoch", axis=alt.Axis(tickMinStep=1)),
+            y=alt.Y("prediction_loss:Q", title="Validation prediction loss", scale=alt.Scale(type="log")),
+            color=alt.Color("variant:N", title="Variant"),
+            tooltip=["sweep:N", "variant:N", "epoch:Q", alt.Tooltip("prediction_loss:Q", format=".6f")],
+        )
+        .properties(width=250, height=220)
+        .facet(column=alt.Column("sweep:N", title=None))
+        .properties(title="Four-epoch PushT convergence snapshot (runs still in flight)")
+    )
+    mo.vstack(
+        [
+            mo.md("## Training convergence across parallel runs"),
+            mo.ui.altair_chart(progress_chart),
+            mo.callout(mo.md("The three seeds converge tightly by epoch 4 (0.00746–0.00772). SIGReg weight 0.05 currently gives the lowest prediction loss, while 0.2–0.5 learns substantially more slowly. Dropout 0–0.2 is similar; dropout 0.5 trails."), kind="info"),
+        ]
+    )
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(
         r"""

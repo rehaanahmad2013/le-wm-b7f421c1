@@ -184,6 +184,27 @@ def collapse_trajectory_figure(metrics: dict, output: Path) -> None:
     plt.close(fig)
 
 
+def convergence_figure(metrics: dict, output: Path) -> None:
+    snapshot = metrics["four_epoch_training_snapshot"]
+    specs = [
+        ("seed", "Random seed"),
+        ("sigreg_weight", "SIGReg weight λ"),
+        ("predictor_dropout", "Predictor dropout"),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.5), constrained_layout=True, sharey=True)
+    for ax, (key, title) in zip(axes, specs):
+        for label, values in snapshot[key].items():
+            epochs = np.arange(1, len(values) + 1)
+            ax.plot(epochs, values, marker="o", linewidth=2, label=label)
+        ax.set(xticks=[1, 2, 3, 4], xlabel="Completed epoch", title=title, yscale="log")
+        ax.grid(color="#dedbd4", linewidth=0.7)
+        ax.legend(frameon=False, fontsize=8, title=title)
+    axes[0].set_ylabel("Validation prediction loss (log scale)")
+    fig.suptitle("Parallel PushT runs converge reproducibly but expose regularization trade-offs", x=0.01, ha="left", fontweight="bold", fontsize=14)
+    fig.savefig(output, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--metrics", type=Path, default=Path("analysis/reproduction_metrics.json"))
@@ -197,6 +218,7 @@ def main() -> None:
     surprise_figure(metrics, args.output / "offline-surprise.png")
     epoch1_ablation_figure(metrics, args.output / "epoch1-ablation.png")
     collapse_trajectory_figure(metrics, args.output / "collapse-trajectory.png")
+    convergence_figure(metrics, args.output / "intermediate-convergence.png")
 
 
 if __name__ == "__main__":
