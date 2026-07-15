@@ -1,0 +1,42 @@
+{
+  "paper": {
+    "control_success_rate": {
+      "PushT": 96.0,
+      "TwoRoom": 87.0,
+      "Reacher": 86.0,
+      "Cube": 74.0
+    }
+  },
+  "reproduced": {
+    "PushT": {
+      "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c",
+      "success_rate": 96.0,
+      "successes": 48,
+      "trials": 50,
+      "evaluation_seconds": 35.178998708724976,
+      "one_step_mse": 0.008176022209227085,
+      "covariance_diag_mean": 1.0026886463165283,
+      "effective_rank": 93.5304183959961,
+      "linear_probe_r": 0.8140968680381775,
+      "mlp_probe_r": 0.8609431982040405,
+      "normal_surprise": 0.008176022209227085,
+      "visual_surprise": 1.3709101676940918,
+      "teleport_surprise": 2.0023374557495117
+    },
+    "TwoRoom": {
+      "run_id": "9bd8039d-e568-4efc-9140-d8ac65416612",
+      "success_rate": 90.0,
+      "successes": 45,
+      "trials": 50,
+      "evaluation_seconds": 33.375409841537476,
+      "one_step_mse": 0.0639743059873581,
+      "covariance_diag_mean": 0.9684023857116699,
+      "effective_rank": 93.90718078613281,
+      "linear_probe_r": 0.9964605569839478,
+      "mlp_probe_r": 0.9994949102401733,
+      "normal_surprise": 0.0639743059873581,
+      "visual_surprise": 2.470550537109375,
+      "teleport_surprise": 1.9851313829421997
+    }
+  }
+}

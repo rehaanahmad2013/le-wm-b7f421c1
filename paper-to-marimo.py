@@ -1,0 +1,232 @@
+import marimo
+
+__generated_with = "0.23.14"
+app = marimo.App(width="full", app_title="LeWorldModel reproduction")
+
+
+@app.cell
+def _():
+    import math
+
+    import altair as alt
+    import marimo as mo
+    import pandas as pd
+
+    return alt, math, mo, pd
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+        # LeWorldModel, reproduced
+
+        An executable companion to **LeWorldModel: Stable End-to-End Joint-Embedding
+        Predictive Architecture from Pixels** (arXiv:2603.19312). It keeps the
+        paper's reported targets separate from measurements reproduced on the
+        16-GPU Kubernetes cluster and links every measurement to its supervised
+        ORX run.
+
+        The headline result is exact: the released PushT checkpoint reaches
+        **48/50 = 96%**, matching Figure 6. Use the environment selector to inspect
+        control fidelity, latent Gaussianity, physical-state probes, and surprise.
+        """
+    )
+    return
+
+
+@app.cell
+def _(pd):
+    control = pd.DataFrame(
+        [
+            {"environment": "PushT", "paper": 96.0, "reproduced": 96.0, "successes": 48, "trials": 50, "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c"},
+            {"environment": "TwoRoom", "paper": 87.0, "reproduced": 90.0, "successes": 45, "trials": 50, "run_id": "9bd8039d-e568-4efc-9140-d8ac65416612"},
+            {"environment": "Reacher", "paper": 86.0, "reproduced": None, "successes": None, "trials": 50, "run_id": "pending"},
+            {"environment": "Cube", "paper": 74.0, "reproduced": None, "successes": None, "trials": 50, "run_id": "pending"},
+        ]
+    )
+    diagnostics = pd.DataFrame(
+        [
+            {"environment": "PushT", "one_step_mse": 0.008176, "cov_diag": 1.00269, "effective_rank": 93.53, "linear_probe_r": 0.81410, "mlp_probe_r": 0.86094, "normal_surprise": 0.008176, "visual_surprise": 1.37091, "teleport_surprise": 2.00234},
+            {"environment": "TwoRoom", "one_step_mse": 0.063974, "cov_diag": 0.96840, "effective_rank": 93.91, "linear_probe_r": 0.99646, "mlp_probe_r": 0.99949, "normal_surprise": 0.063974, "visual_surprise": 2.47055, "teleport_surprise": 1.98513},
+        ]
+    )
+    return control, diagnostics
+
+
+@app.cell
+def _(control, mo):
+    environment = mo.ui.dropdown(
+        options=control["environment"].tolist(),
+        value="PushT",
+        label="Environment",
+    )
+    environment
+    return (environment,)
+
+
+@app.cell
+def _(alt, control, mo):
+    control_long = control.melt(
+        id_vars=["environment", "run_id"],
+        value_vars=["paper", "reproduced"],
+        var_name="series",
+        value_name="success_rate",
+    ).dropna()
+    control_chart = (
+        alt.Chart(control_long)
+        .mark_bar(cornerRadiusEnd=3)
+        .encode(
+            x=alt.X("success_rate:Q", title="Success rate (%)", scale=alt.Scale(domain=[0, 100])),
+            y=alt.Y("environment:N", title=None, sort=["PushT", "TwoRoom", "Reacher", "Cube"]),
+            yOffset="series:N",
+            color=alt.Color("series:N", title=None, scale=alt.Scale(domain=["paper", "reproduced"], range=["#8b95a5", "#5b7cfa"])),
+            tooltip=["environment:N", "series:N", alt.Tooltip("success_rate:Q", format=".1f")],
+        )
+        .properties(height=240, title="Goal-conditioned control: paper vs reproduction")
+    )
+    mo.ui.altair_chart(control_chart)
+    return
+
+
+@app.cell
+def _(control, environment, math, mo):
+    selected_control = control.loc[control["environment"] == environment.value].iloc[0]
+
+    def wilson(successes, trials, z=1.959963984540054):
+        if successes is None or math.isnan(successes):
+            return None
+        p = successes / trials
+        den = 1 + z * z / trials
+        center = (p + z * z / (2 * trials)) / den
+        margin = z * math.sqrt(p * (1 - p) / trials + z * z / (4 * trials * trials)) / den
+        return 100 * (center - margin), 100 * (center + margin)
+
+    selected_ci = wilson(selected_control["successes"], selected_control["trials"])
+    reproduced_text = "pending" if selected_ci is None else f"{selected_control['reproduced']:.1f}%"
+    ci_text = "awaiting run" if selected_ci is None else f"95% Wilson CI {selected_ci[0]:.1f}–{selected_ci[1]:.1f}%"
+    gap_text = "—" if selected_ci is None else f"{selected_control['reproduced'] - selected_control['paper']:+.1f} pp"
+    mo.hstack(
+        [
+            mo.stat(value=f"{selected_control['paper']:.1f}%", label="Paper target", bordered=True),
+            mo.stat(value=reproduced_text, label="Reproduced", caption=ci_text, bordered=True),
+            mo.stat(value=gap_text, label="Reproduction gap", caption=f"ORX {selected_control['run_id'][:8]}", bordered=True),
+        ],
+        widths="equal",
+    )
+    return
+
+
+@app.cell
+def _(diagnostics, environment, mo):
+    selected_diag_rows = diagnostics.loc[diagnostics["environment"] == environment.value]
+    mo.stop(selected_diag_rows.empty, mo.callout(mo.md("Diagnostics are pending for this environment."), kind="info"))
+    selected_diag = selected_diag_rows.iloc[0]
+    mo.hstack(
+        [
+            mo.stat(value=f"{selected_diag['one_step_mse']:.4f}", label="One-step latent MSE", bordered=True),
+            mo.stat(value=f"{selected_diag['cov_diag']:.3f}", label="Mean covariance diagonal", caption="SIGReg target = 1", bordered=True),
+            mo.stat(value=f"{selected_diag['effective_rank']:.1f} / 192", label="Effective latent rank", bordered=True),
+            mo.stat(value=f"{selected_diag['linear_probe_r']:.3f} / {selected_diag['mlp_probe_r']:.3f}", label="Probe Pearson r", caption="linear / MLP", bordered=True),
+        ],
+        widths="equal",
+    )
+    return (selected_diag,)
+
+
+@app.cell
+def _(alt, environment, mo, pd, selected_diag):
+    surprise = pd.DataFrame(
+        {
+            "condition": ["Normal", "Visual proxy", "Continuity violation"],
+            "prediction_mse": [selected_diag["normal_surprise"], selected_diag["visual_surprise"], selected_diag["teleport_surprise"]],
+        }
+    )
+    surprise_chart = (
+        alt.Chart(surprise)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("condition:N", title=None, sort=["Normal", "Visual proxy", "Continuity violation"]),
+            y=alt.Y("prediction_mse:Q", title="Next-latent prediction MSE"),
+            color=alt.Color("condition:N", legend=None, scale=alt.Scale(range=["#8b95a5", "#e3a857", "#d95d78"])),
+            tooltip=["condition:N", alt.Tooltip("prediction_mse:Q", format=".5f")],
+        )
+        .properties(height=250, title=f"{environment.value}: matched offline surprise test")
+    )
+    mo.vstack(
+        [
+            mo.ui.altair_chart(surprise_chart),
+            mo.callout(
+                mo.md("The physical proxy replaces the target with an unrelated trajectory state. The visual proxy permutes color channels and is deliberately labeled separately from the paper's simulator-level color intervention."),
+                kind="neutral",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("## What was actually reproduced")
+    mo.mermaid(
+        """
+        flowchart LR
+          P[224×224 pixels] --> E[ViT-Tiny encoder]
+          E --> Z[192-D latent]
+          A[5-action block] --> AE[Action encoder]
+          Z --> T[6-layer AdaLN predictor]
+          AE --> T
+          T --> ZN[Predicted next latent]
+          ZN --> M[MSE prediction]
+          Z --> S[SIGReg → N(0,I)]
+          ZN --> C[CEM terminal goal cost]
+        """
+    )
+    return
+
+
+@app.cell
+def _(mo, pd):
+    protocol_ledger = pd.DataFrame(
+        [
+            ["Epochs", "10", "released config said 100", "10 for paper-faithful runs"],
+            ["SIGReg λ", "0.1 prose / 0.09 best", "released config 0.09", "0.09 headline; explicit ablations"],
+            ["TwoRoom history", "1", "released checkpoint 3", "checkpoint eval 3; train variants explicit"],
+            ["CEM iterations", "30 PushT / 10 others", "released config 30 all", "paper protocol"],
+            ["Eval RNG", "42", "training seed 3072", "separate eval_seed=42"],
+            ["Dependencies", "not pinned", "latest resolver breaks ABI", "NumPy 1.26.4 + SWM 0.1.1"],
+        ],
+        columns=["Decision", "Paper", "Released code", "This reproduction"],
+    )
+    mo.vstack([mo.md("## Reproducibility ledger"), mo.ui.table(protocol_ledger, selection=None)])
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+        ## Interpretation
+
+        - The exact PushT headline confirms that the released model, data, and
+          paper-seed CEM stack are internally consistent.
+        - PushT and TwoRoom covariance diagonals are close to one, directly
+          supporting the claimed SIGReg Gaussianization; their effective rank is
+          about half the 192-D ambient space, so isotropy is useful but not exact.
+        - Physical state is highly recoverable in TwoRoom (`r≈.996` linear), while
+          the seven-dimensional PushT state is more entangled (`r≈.814` linear,
+          `.861` MLP) in this joint probe.
+        - The offline target-swap test robustly detects continuity violations, but
+          it is not a substitute for the paper's simulator-level teleport/color
+          intervention. Those two protocols remain labeled separately.
+
+        **Primary sources:** [paper](https://arxiv.org/abs/2603.19312),
+        [official code](https://github.com/lucas-maes/le-wm), and
+        [official checkpoints/data](https://huggingface.co/collections/quentinll/lewm).
+        """
+    )
+    return
+
+
+if __name__ == "__main__":
+    app.run()
