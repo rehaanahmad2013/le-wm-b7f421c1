@@ -1,5 +1,5 @@
 {
-  "name": "pusht-10ep-seed-3072",
+  "name": "pusht-dropout-0.2",
   "mode": "train",
   "environment": "pusht",
   "seed": 3072,
@@ -7,7 +7,7 @@
   "epochs": 10,
   "history_size": 3,
   "sigreg_weight": 0.09,
-  "predictor_dropout": 0.1,
+  "predictor_dropout": 0.2,
   "cem_steps": 30,
   "num_eval": 50,
   "probe_samples": 8192,
