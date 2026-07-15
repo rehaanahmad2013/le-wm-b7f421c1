@@ -37,6 +37,21 @@
       "normal_surprise": 0.0639743059873581,
       "visual_surprise": 2.470550537109375,
       "teleport_surprise": 1.9851313829421997
+    },
+    "Reacher": {
+      "run_id": "db9e902a-cf4c-4600-ad10-395f11293cf1",
+      "success_rate": 74.0,
+      "successes": 37,
+      "trials": 50,
+      "evaluation_seconds": 41.41036629676819,
+      "one_step_mse": 0.006533389445394278,
+      "covariance_diag_mean": 0.9902574419975281,
+      "effective_rank": 79.11722564697266,
+      "linear_probe_r": 0.4942648410797119,
+      "mlp_probe_r": 0.4854389727115631,
+      "normal_surprise": 0.006533389445394278,
+      "visual_surprise": 1.8689076900482178,
+      "teleport_surprise": 1.9802567958831787
     }
   }
 }

@@ -41,7 +41,7 @@ def _(pd):
         [
             {"environment": "PushT", "paper": 96.0, "reproduced": 96.0, "successes": 48, "trials": 50, "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c"},
             {"environment": "TwoRoom", "paper": 87.0, "reproduced": 90.0, "successes": 45, "trials": 50, "run_id": "9bd8039d-e568-4efc-9140-d8ac65416612"},
-            {"environment": "Reacher", "paper": 86.0, "reproduced": None, "successes": None, "trials": 50, "run_id": "pending"},
+            {"environment": "Reacher", "paper": 86.0, "reproduced": 74.0, "successes": 37, "trials": 50, "run_id": "db9e902a-cf4c-4600-ad10-395f11293cf1"},
             {"environment": "Cube", "paper": 74.0, "reproduced": None, "successes": None, "trials": 50, "run_id": "pending"},
         ]
     )
@@ -49,6 +49,7 @@ def _(pd):
         [
             {"environment": "PushT", "one_step_mse": 0.008176, "cov_diag": 1.00269, "effective_rank": 93.53, "linear_probe_r": 0.81410, "mlp_probe_r": 0.86094, "normal_surprise": 0.008176, "visual_surprise": 1.37091, "teleport_surprise": 2.00234},
             {"environment": "TwoRoom", "one_step_mse": 0.063974, "cov_diag": 0.96840, "effective_rank": 93.91, "linear_probe_r": 0.99646, "mlp_probe_r": 0.99949, "normal_surprise": 0.063974, "visual_surprise": 2.47055, "teleport_surprise": 1.98513},
+            {"environment": "Reacher", "one_step_mse": 0.006533, "cov_diag": 0.99026, "effective_rank": 79.12, "linear_probe_r": 0.49426, "mlp_probe_r": 0.48544, "normal_surprise": 0.006533, "visual_surprise": 1.86891, "teleport_surprise": 1.98026},
         ]
     )
     return control, diagnostics
@@ -210,6 +211,9 @@ def _(mo):
 
         - The exact PushT headline confirms that the released model, data, and
           paper-seed CEM stack are internally consistent.
+        - Reacher reaches 74% rather than the paper's 86%; with only 50 trials,
+          its Wilson interval is wide, but the point estimate is a meaningful
+          discrepancy that the from-scratch runs should help diagnose.
         - PushT and TwoRoom covariance diagonals are close to one, directly
           supporting the claimed SIGReg Gaussianization; their effective rank is
           about half the 192-D ambient space, so isotropy is useful but not exact.
