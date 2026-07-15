@@ -7,6 +7,19 @@
       "Cube": 74.0
     }
   },
+  "training_smoke": {
+    "run_id": "2a4f4dbf-d930-45e4-b229-a6ce2fd91236",
+    "epochs": 1,
+    "elapsed_seconds": 3962.0832901000977,
+    "initial_validation_loss": 5.0109028816223145,
+    "final_validation_loss": 0.2063269466161728,
+    "initial_prediction_loss": 0.07340271025896072,
+    "final_prediction_loss": 0.026888882741332054,
+    "initial_sigreg_loss": 55.0,
+    "final_sigreg_loss": 1.9935710430145264,
+    "control_success_rate": 20.0,
+    "control_trials": 5
+  },
   "reproduced": {
     "PushT": {
       "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c",

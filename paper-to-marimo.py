@@ -205,6 +205,29 @@ def _(mo, pd):
 
 
 @app.cell
+def _(mo, pd):
+    smoke = pd.DataFrame(
+        [
+            ["Total validation loss", 5.01090, 0.20633, "24.3× lower"],
+            ["Prediction loss", 0.07340, 0.02689, "2.7× lower"],
+            ["SIGReg diagnostic", 55.00000, 1.99357, "27.6× lower"],
+        ],
+        columns=["Metric", "Initialization", "After one epoch", "Change"],
+    )
+    mo.vstack(
+        [
+            mo.md("## From-scratch smoke result"),
+            mo.ui.table(smoke, selection=None),
+            mo.callout(
+                mo.md("The 18.0M-parameter model trained end-to-end for 13,933 steps; every parameter received gradients. Its 5-case control check reached 1/5, which is a pipeline smoke test rather than a paper-comparable estimate."),
+                kind="success",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(
         r"""
