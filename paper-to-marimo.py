@@ -70,10 +70,18 @@ def _(alt, mo, pd):
             {"epoch": 1, "metric": "Prediction loss", "value": 0.0000624628},
             {"epoch": 2, "metric": "Prediction loss", "value": 0.00000992368},
             {"epoch": 3, "metric": "Prediction loss", "value": 0.00000533978},
+            {"epoch": 4, "metric": "Prediction loss", "value": 0.00000334471},
+            {"epoch": 5, "metric": "Prediction loss", "value": 0.00000261433},
+            {"epoch": 6, "metric": "Prediction loss", "value": 0.00000232247},
+            {"epoch": 7, "metric": "Prediction loss", "value": 0.00000184505},
             {"epoch": 0, "metric": "SIGReg diagnostic", "value": 55.5},
             {"epoch": 1, "metric": "SIGReg diagnostic", "value": 51.4943},
             {"epoch": 2, "metric": "SIGReg diagnostic", "value": 51.4943},
             {"epoch": 3, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 4, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 5, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 6, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 7, "metric": "SIGReg diagnostic", "value": 51.4943},
         ]
     )
     collapse_chart = (
@@ -91,7 +99,7 @@ def _(alt, mo, pd):
         [
             mo.md("## Collapse trajectory"),
             mo.ui.altair_chart(collapse_chart),
-            mo.md("Prediction error falls by **12,826×** from initialization through epoch 3, but the held-out SIGReg diagnostic remains **51.49** instead of approaching the Gaussian target. Low prediction error alone is therefore not evidence of a useful world model."),
+            mo.md("Prediction error falls by **37,124×** from initialization through epoch 7, but the held-out SIGReg diagnostic remains **51.49** instead of approaching the Gaussian target. Low prediction error alone is therefore not evidence of a useful world model."),
         ]
     )
     return
@@ -130,22 +138,22 @@ def _(mo):
 def _(alt, mo, pd):
     trajectories = {
         "Random seed": {
-            "3072": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508],
-            "123": [0.0244867, 0.0133568, 0.00993717, 0.00767666, 0.00616885],
-            "42": [0.0280995, 0.0130376, 0.00890300, 0.00745580, 0.00640973],
+            "3072": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508, 0.00507038, 0.00428108],
+            "123": [0.0244867, 0.0133568, 0.00993717, 0.00767666, 0.00616885, 0.00485272, 0.00423116],
+            "42": [0.0280995, 0.0130376, 0.00890300, 0.00745580, 0.00640973, 0.00499461, 0.00443598],
         },
         "SIGReg weight": {
-            "0.05": [0.0161022, 0.00923039, 0.00642990, 0.00538097, 0.00419310],
-            "0.09": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508],
-            "0.10": [0.0251537, 0.0141873, 0.00969312, 0.00797197, 0.00623122],
-            "0.20": [0.0655181, 0.0206285, 0.0155480, 0.0116433, 0.00973398],
-            "0.50": [0.156785, 0.0566378, 0.0394593, 0.0292177, 0.0231041],
+            "0.05": [0.0161022, 0.00923039, 0.00642990, 0.00538097, 0.00419310, 0.00351352, 0.00302290],
+            "0.09": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508, 0.00507038, 0.00428108],
+            "0.10": [0.0251537, 0.0141873, 0.00969312, 0.00797197, 0.00623122, 0.00515268, 0.00452115],
+            "0.20": [0.0655181, 0.0206285, 0.0155480, 0.0116433, 0.00973398, 0.00805242, 0.00684733],
+            "0.50": [0.156785, 0.0566378, 0.0394593, 0.0292177, 0.0231041, 0.0187138, 0.0160002],
         },
         "Predictor dropout": {
-            "0.0": [0.0220167, 0.0121709, 0.00929167, 0.00717766, 0.00559076],
-            "0.1": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508],
-            "0.2": [0.0258967, 0.0145559, 0.00962948, 0.00793779, 0.00633766],
-            "0.5": [0.0244672, 0.0153039, 0.0112242, 0.00953380, 0.00798399],
+            "0.0": [0.0220167, 0.0121709, 0.00929167, 0.00717766, 0.00559076, 0.00488867, 0.00403336],
+            "0.1": [0.0250648, 0.0134171, 0.00925220, 0.00772082, 0.00597508, 0.00507038, 0.00428108],
+            "0.2": [0.0258967, 0.0145559, 0.00962948, 0.00793779, 0.00633766, 0.00537413, 0.00464466],
+            "0.5": [0.0244672, 0.0153039, 0.0112242, 0.00953380, 0.00798399, 0.00696092, 0.00620494],
         },
     }
     training_rows = [
@@ -166,13 +174,13 @@ def _(alt, mo, pd):
         )
         .properties(width=250, height=220)
         .facet(column=alt.Column("sweep:N", title=None))
-        .properties(title="Five-epoch PushT convergence snapshot at wrap-up")
+        .properties(title="Seven-epoch PushT convergence snapshot at wrap-up")
     )
     mo.vstack(
         [
             mo.md("## Training convergence across parallel runs"),
             mo.ui.altair_chart(progress_chart),
-            mo.callout(mo.md("The three seeds remain tight after epoch 5 (0.00598–0.00641). SIGReg weight 0.05 gives the lowest prediction loss (0.00419), while 0.2–0.5 learns substantially more slowly. Dropout 0–0.2 is similar; dropout 0.5 trails. Cancellation was requested after these five completed checkpoints when the user returned."), kind="info"),
+            mo.callout(mo.md("The three seeds remain tight after epoch 7 (0.00423–0.00444). SIGReg weight 0.05 gives the lowest prediction loss (0.00302), while 0.2–0.5 learns substantially more slowly. Dropout 0–0.2 is similar; dropout 0.5 trails. The control-plane delay allowed two additional checkpoints before cancellation completed."), kind="info"),
         ]
     )
     return

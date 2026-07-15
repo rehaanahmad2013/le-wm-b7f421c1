@@ -173,19 +173,19 @@ def collapse_trajectory_figure(metrics: dict, output: Path) -> None:
     ax.grid(color="#dedbd4", linewidth=0.7)
     ax.legend(frameon=False, loc="center right")
     ax.annotate(
-        "prediction error falls 12,826×",
-        xy=(3, pred[-1]),
-        xytext=(1.15, 0.0015),
+        "prediction error falls 37,124×",
+        xy=(7, pred[-1]),
+        xytext=(3.2, 0.0015),
         arrowprops={"arrowstyle": "->", "color": "#596273"},
         color="#2d3440",
     )
-    ax.annotate("latent regularity stays at 51.49", xy=(2.9, sigreg[-1]), xytext=(1.2, 18), color="#2d3440")
+    ax.annotate("latent regularity stays at 51.49", xy=(6.8, sigreg[-1]), xytext=(3.0, 18), color="#2d3440")
     fig.savefig(output, dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
 def convergence_figure(metrics: dict, output: Path) -> None:
-    snapshot = metrics["five_epoch_training_snapshot"]
+    snapshot = metrics["seven_epoch_training_snapshot"]
     specs = [
         ("seed", "Random seed"),
         ("sigreg_weight", "SIGReg weight λ"),
@@ -196,7 +196,7 @@ def convergence_figure(metrics: dict, output: Path) -> None:
         for label, values in snapshot[key].items():
             epochs = np.arange(1, len(values) + 1)
             ax.plot(epochs, values, marker="o", linewidth=2, label=label)
-        ax.set(xticks=[1, 2, 3, 4, 5], xlabel="Completed epoch", title=title, yscale="log")
+        ax.set(xticks=list(range(1, 8)), xlabel="Completed epoch", title=title, yscale="log")
         ax.grid(color="#dedbd4", linewidth=0.7)
         ax.legend(frameon=False, fontsize=8, title=title)
     axes[0].set_ylabel("Validation prediction loss (log scale)")
