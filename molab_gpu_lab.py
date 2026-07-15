@@ -98,11 +98,22 @@ def run_gpu_lab(
 
     def gaussian_projection_loss(z):
         projected = z @ projections.T
-        angles = projected[:, :, None] * frequencies
+        centered = projected - projected.mean(0, keepdim=True)
+        std = (centered.square().mean(0) + 1e-4).sqrt()
+        normalized = centered / std[None, :]
+        covariance = normalized.T @ normalized / max(len(normalized) - 1, 1)
+        off_diagonal = covariance - torch.diag(torch.diag(covariance))
+        angles = normalized[:, :, None] * frequencies
         real = torch.cos(angles).mean(0)
         imag = torch.sin(angles).mean(0)
         target = torch.exp(-0.5 * frequencies.square())[None, :]
-        return (real - target).square().mean() + imag.square().mean()
+        characteristic = (real - target).square().mean() + imag.square().mean()
+        # The hinge on projected standard deviation supplies a useful gradient
+        # before the encoder reaches an exactly constant representation.
+        variance = F.relu(1.0 - std).mean()
+        decorrelation = off_diagonal.square().mean()
+        mean = projected.mean(0).square().mean()
+        return 2.0 * variance + 0.10 * decorrelation + 0.10 * characteristic + 0.01 * mean
 
     @torch.no_grad()
     def evaluate(encoder, predictor):
