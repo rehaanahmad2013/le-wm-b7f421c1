@@ -154,7 +154,14 @@ def run(cfg: DictConfig):
     end_time = time.time()
     
     print(metrics)
-    serializable_metrics = json.loads(json.dumps(metrics, default=lambda x: x.item() if hasattr(x, "item") else str(x)))
+    def _json_default(value):
+        if hasattr(value, "tolist"):
+            return value.tolist()
+        if hasattr(value, "item"):
+            return value.item()
+        return str(value)
+
+    serializable_metrics = json.loads(json.dumps(metrics, default=_json_default))
     print("ORX_METRIC " + json.dumps({
         "kind": "control",
         "environment": cfg.world.env_name,

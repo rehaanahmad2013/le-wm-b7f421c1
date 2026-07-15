@@ -3,6 +3,7 @@
   "mode": "released",
   "environment": "pusht",
   "seed": 3072,
+  "eval_seed": 42,
   "epochs": 0,
   "history_size": 3,
   "sigreg_weight": 0.09,

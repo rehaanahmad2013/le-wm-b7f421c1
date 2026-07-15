@@ -281,7 +281,7 @@ def evaluate_control(environment: str, policy: str) -> None:
         f"policy={policy}",
         f"eval.num_eval={CFG['num_eval']}",
         f"solver.n_steps={CFG['cem_steps']}",
-        f"seed={CFG['seed']}",
+        f"seed={CFG.get('eval_seed', 42)}",
         f"output.filename={CFG['name']}-results.txt",
     ]
     run(cmd, cwd=ROOT)
