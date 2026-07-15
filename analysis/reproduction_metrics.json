@@ -38,6 +38,23 @@
     ],
     "lambda_zero_epoch2": {"prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695}
   },
+  "trained": {
+    "TwoRoom": {
+      "run_id": "8c02bd0e-ebeb-4d8d-bf1a-b4359307c7ee",
+      "success_rate": 92.0,
+      "successes": 46,
+      "trials": 50,
+      "training_seconds": 11009.659115552902,
+      "final_validation_loss": 0.16840578615665436,
+      "final_prediction_loss": 0.007982910610735416,
+      "final_sigreg_loss": 1.7825829982757568,
+      "one_step_mse": 0.0071618445217609406,
+      "covariance_diag_mean": 1.0150846242904663,
+      "effective_rank": 55.153194427490234,
+      "linear_probe_r": 0.9987003803253174,
+      "mlp_probe_r": 0.9997509121894836
+    }
+  },
   "reproduced": {
     "PushT": {
       "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c",

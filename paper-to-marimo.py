@@ -64,6 +64,26 @@ def _(alt, mo, pd):
 
 @app.cell
 def _(mo):
+    mo.vstack(
+        [
+            mo.md("## Full from-scratch result: TwoRoom"),
+            mo.hstack(
+                [
+                    mo.stat(value="46/50 = 92%", label="Control success", caption="paper 87%; released checkpoint 90%", bordered=True),
+                    mo.stat(value="0.00716", label="One-step latent MSE", caption="after 10 epochs", bordered=True),
+                    mo.stat(value="1.015", label="Covariance diagonal", caption="SIGReg target = 1", bordered=True),
+                    mo.stat(value=".9987 / .9998", label="Position probe r", caption="linear / MLP", bordered=True),
+                ],
+                widths="equal",
+            ),
+            mo.callout(mo.md("Training from pixels with the paper's history size 1 took 11,010 seconds and exceeded both the paper and released-checkpoint control point estimates."), kind="success"),
+        ]
+    )
+    return
+
+
+@app.cell
+def _(mo):
     mo.md(
         r"""
         # LeWorldModel, reproduced

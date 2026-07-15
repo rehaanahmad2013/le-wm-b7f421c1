@@ -46,17 +46,26 @@ def control_figure(metrics: dict, output: Path) -> None:
     envs = list(PAPER)
     y = np.arange(len(envs))
     reproduced = [metrics["reproduced"].get(env) for env in envs]
+    trained = [metrics.get("trained", {}).get(env) for env in envs]
     fig, ax = plt.subplots(figsize=(10.5, 4.7), constrained_layout=True)
-    ax.barh(y + 0.17, [PAPER[e] for e in envs], height=0.29, color="#a9b0ba", label="Paper")
+    ax.barh(y + 0.25, [PAPER[e] for e in envs], height=0.22, color="#a9b0ba", label="Paper")
     for i, row in enumerate(reproduced):
         if not row:
             ax.text(2, i - 0.17, "running", va="center", color="#7a8290", fontstyle="italic")
             continue
         value = row["success_rate"]
         low, high = wilson(row["successes"], row["trials"])
-        ax.barh(i - 0.17, value, height=0.29, color="#345cdb")
-        ax.errorbar(value, i - 0.17, xerr=[[value - low], [high - value]], fmt="none", ecolor="#163591", capsize=3)
-        ax.text(value + 1.1, i - 0.17, f"{row['successes']}/{row['trials']}  ({value:.0f}%)", va="center", fontweight="bold")
+        ax.barh(i, value, height=0.22, color="#345cdb", label="Released checkpoint" if i == 0 else None)
+        ax.errorbar(value, i, xerr=[[value - low], [high - value]], fmt="none", ecolor="#163591", capsize=3)
+        ax.text(value + 1.1, i, f"{row['successes']}/{row['trials']}  ({value:.0f}%)", va="center", fontweight="bold")
+    for i, row in enumerate(trained):
+        if not row:
+            continue
+        value = row["success_rate"]
+        low, high = wilson(row["successes"], row["trials"])
+        ax.barh(i - 0.25, value, height=0.22, color="#3a9d8f", label="From scratch" if i == 1 else None)
+        ax.errorbar(value, i - 0.25, xerr=[[value - low], [high - value]], fmt="none", ecolor="#226b61", capsize=3)
+        ax.text(value + 1.1, i - 0.25, f"{row['successes']}/{row['trials']}  ({value:.0f}%)", va="center", fontweight="bold")
     ax.set(yticks=y, yticklabels=envs, xlim=(0, 108), xlabel="Goal-conditioned control success (%)")
     ax.invert_yaxis()
     ax.grid(axis="x", color="#dedbd4", linewidth=0.7)
