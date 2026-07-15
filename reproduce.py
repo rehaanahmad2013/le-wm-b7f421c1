@@ -58,7 +58,7 @@ DATASETS = {
     "reacher": {
         "repo": "quentinll/lewm-reacher",
         "file": "reacher.tar.zst",
-        "sha256": "4ff238f7370bf8c3fd1882ccf604f0e3538375c2636ddbbf45eeb7544d492668",
+        "sha256": "4ff2385e49712caa89f21b8e0a246e2614b621d3f22cf2d1224d845e879a1cc2",
         "expected": "dmc/reacher_random.h5",
         "train_config": "dmc",
         "eval_config": "reacher.yaml",
