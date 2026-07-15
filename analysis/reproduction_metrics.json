@@ -22,6 +22,7 @@
   },
   "epoch1_ablation_snapshot": {
     "sigreg_weight": [
+      {"value": 0.0, "prediction_loss": 0.00006246277189347893, "sigreg_loss": 51.49431228637695},
       {"value": 0.01, "prediction_loss": 0.012690960429608822, "sigreg_loss": 4.615327835083008},
       {"value": 0.05, "prediction_loss": 0.016102170571684837, "sigreg_loss": 2.259392738342285},
       {"value": 0.09, "prediction_loss": 0.025064809247851372, "sigreg_loss": 2.3142645359039307},
@@ -34,7 +35,8 @@
       {"value": 0.1, "prediction_loss": 0.025064809247851372, "sigreg_loss": 2.3142645359039307},
       {"value": 0.2, "prediction_loss": 0.025896728038787842, "sigreg_loss": 2.1558022499084473},
       {"value": 0.5, "prediction_loss": 0.02446717955172062, "sigreg_loss": 2.074491262435913}
-    ]
+    ],
+    "lambda_zero_epoch2": {"prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695}
   },
   "reproduced": {
     "PushT": {

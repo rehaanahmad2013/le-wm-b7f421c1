@@ -19,6 +19,7 @@ def _():
 def _(alt, mo, pd):
     ablation = pd.DataFrame(
         [
+            ["SIGReg weight", 0.00, 0.00006246, 51.4943],
             ["SIGReg weight", 0.01, 0.012691, 4.6153],
             ["SIGReg weight", 0.05, 0.016102, 2.2594],
             ["SIGReg weight", 0.09, 0.025065, 2.3143],
@@ -55,7 +56,7 @@ def _(alt, mo, pd):
         [
             mo.md("## Early ablation signal"),
             mo.ui.altair_chart(ablation_chart),
-            mo.callout(mo.md("λ=0.01 minimizes one-epoch prediction loss but leaves a larger SIGReg residual; λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="info"),
+            mo.callout(mo.md("λ=0 collapses: prediction loss reaches 6.25×10⁻⁵ while the SIGReg diagnostic stays at 51.49. Among nonzero weights, λ=0.01 minimizes one-epoch prediction loss but leaves a larger SIGReg residual; λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="warn"),
         ]
     )
     return

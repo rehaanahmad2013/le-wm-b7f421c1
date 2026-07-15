@@ -140,6 +140,7 @@ def epoch1_ablation_figure(metrics: dict, output: Path) -> None:
             ax.grid(color="#dedbd4", linewidth=0.7)
             ax.set_xticks(x)
             ax.set_xticklabels(labels)
+    axes[0, 0].set_yscale("log")
     fig.suptitle("After one epoch: regularization trade-offs", x=0.01, ha="left", fontweight="bold", fontsize=14)
     fig.savefig(output, dpi=220, bbox_inches="tight")
     plt.close(fig)
