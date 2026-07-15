@@ -77,6 +77,15 @@ def _(mo):
                 widths="equal",
             ),
             mo.callout(mo.md("Training from pixels with the paper's history size 1 took 11,010 seconds and exceeded both the paper and released-checkpoint control point estimates."), kind="success"),
+            mo.ui.table(
+                [
+                    {"evaluation": "Final validation", "measurement": "loss .16841 · prediction .00798 · SIGReg 1.7826"},
+                    {"evaluation": "Latent health", "measurement": "diag 1.015 ± .126 · off-diagonal RMS .119 · rank 55.2/192"},
+                    {"evaluation": "Position probes", "measurement": "linear r .99870 · MLP r .99975 (2-D proprio)"},
+                    {"evaluation": "Offline surprise", "measurement": "normal .00716 · visual proxy 1.13661 · target swap 2.02884"},
+                ],
+                selection=None,
+            ),
         ]
     )
     return
@@ -94,9 +103,11 @@ def _(mo):
         16-GPU Kubernetes cluster and links every measurement to its supervised
         ORX run.
 
-        The headline result is exact: the released PushT checkpoint reaches
-        **48/50 = 96%**, matching Figure 6. Use the environment selector to inspect
-        control fidelity, latent Gaussianity, physical-state probes, and surprise.
+        The released PushT checkpoint reaches **48/50 = 96%**, exactly matching
+        Figure 6. More importantly, the first full model trained from pixels reaches
+        **46/50 = 92% on TwoRoom**, above the paper's 87% point estimate. Use the
+        environment selector to inspect control fidelity, latent Gaussianity,
+        physical-state probes, and surprise.
         """
     )
     return

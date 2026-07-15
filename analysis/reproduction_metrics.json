@@ -50,9 +50,16 @@
       "final_sigreg_loss": 1.7825829982757568,
       "one_step_mse": 0.0071618445217609406,
       "covariance_diag_mean": 1.0150846242904663,
+      "covariance_diag_std": 0.1262802928686142,
+      "covariance_offdiag_rms": 0.1190284937620163,
       "effective_rank": 55.153194427490234,
       "linear_probe_r": 0.9987003803253174,
-      "mlp_probe_r": 0.9997509121894836
+      "linear_probe_mse": 0.0024145441129803658,
+      "mlp_probe_r": 0.9997509121894836,
+      "mlp_probe_mse": 0.00047619245015084743,
+      "normal_surprise": 0.0071618445217609406,
+      "visual_surprise": 1.1366117000579834,
+      "teleport_surprise": 2.028838634490967
     }
   },
   "reproduced": {
