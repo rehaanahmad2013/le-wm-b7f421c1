@@ -1,11 +1,12 @@
 {
-  "name": "pusht-10ep-seed-3072",
+  "name": "pusht-embed96-seed3072",
   "mode": "train",
   "environment": "pusht",
   "seed": 3072,
   "eval_seed": 42,
   "epochs": 10,
   "history_size": 3,
+  "embed_dim": 96,
   "sigreg_weight": 0.09,
   "predictor_dropout": 0.1,
   "cem_steps": 30,

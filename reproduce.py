@@ -168,6 +168,7 @@ def train(environment: str) -> str:
         "trainer.devices=1",
         "wandb.enabled=false",
         f"history_size={CFG['history_size']}",
+        f"embed_dim={CFG.get('embed_dim', 192)}",
         f"loss.sigreg.weight={CFG['sigreg_weight']}",
         f"model.predictor.dropout={CFG['predictor_dropout']}",
         f"subdir={name}",
