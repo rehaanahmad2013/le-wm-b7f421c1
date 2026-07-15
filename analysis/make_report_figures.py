@@ -69,7 +69,7 @@ def control_figure(metrics: dict, output: Path) -> None:
     ax.set(yticks=y, yticklabels=envs, xlim=(0, 108), xlabel="Goal-conditioned control success (%)")
     ax.invert_yaxis()
     ax.grid(axis="x", color="#dedbd4", linewidth=0.7)
-    ax.set_title("Released-checkpoint control reproduction", loc="left", fontweight="bold")
+    ax.set_title("Paper vs released-checkpoint vs from-scratch control", loc="left", fontweight="bold")
     ax.legend(frameon=False, loc="lower right")
     fig.savefig(output, dpi=220, bbox_inches="tight")
     plt.close(fig)
