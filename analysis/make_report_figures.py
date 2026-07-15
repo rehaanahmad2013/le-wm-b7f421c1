@@ -128,7 +128,8 @@ def epoch1_ablation_figure(metrics: dict, output: Path) -> None:
     ]
     for col, (key, xlabel, color) in enumerate(specs):
         rows = snapshot[key]
-        x = [row["value"] for row in rows]
+        labels = [f"{row['value']:g}" for row in rows]
+        x = np.arange(len(rows))
         pred = [row["prediction_loss"] for row in rows]
         sigreg = [row["sigreg_loss"] for row in rows]
         axes[0, col].plot(x, pred, marker="o", linewidth=2.2, color=color)
@@ -138,6 +139,7 @@ def epoch1_ablation_figure(metrics: dict, output: Path) -> None:
         for ax in axes[:, col]:
             ax.grid(color="#dedbd4", linewidth=0.7)
             ax.set_xticks(x)
+            ax.set_xticklabels(labels)
     fig.suptitle("After one epoch: regularization trade-offs", x=0.01, ha="left", fontweight="bold", fontsize=14)
     fig.savefig(output, dpi=220, bbox_inches="tight")
     plt.close(fig)
