@@ -56,7 +56,7 @@ def _(alt, mo, pd):
         [
             mo.md("## Early ablation signal"),
             mo.ui.altair_chart(ablation_chart),
-            mo.callout(mo.md("λ=0 collapses: prediction loss reaches 6.25×10⁻⁵ while the SIGReg diagnostic stays at 51.49. Among nonzero weights, λ=0.01 minimizes one-epoch prediction loss but leaves a larger SIGReg residual; λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="warn"),
+            mo.callout(mo.md("λ=0 collapses: prediction loss reaches 6.25×10⁻⁵ while the SIGReg diagnostic stays at 51.49. λ=0.01 minimizes one-epoch prediction loss but becomes non-finite in epoch 3 at the paper learning rate; its stabilized rerun uses half the learning rate and tighter clipping. λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="warn"),
         ]
     )
     return

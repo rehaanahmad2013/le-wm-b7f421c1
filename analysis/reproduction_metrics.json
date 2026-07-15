@@ -36,7 +36,15 @@
       {"value": 0.2, "prediction_loss": 0.025896728038787842, "sigreg_loss": 2.1558022499084473},
       {"value": 0.5, "prediction_loss": 0.02446717955172062, "sigreg_loss": 2.074491262435913}
     ],
-    "lambda_zero_epoch2": {"prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695}
+    "lambda_zero_epoch2": {"prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695},
+    "lambda_001_instability": {
+      "run_id": "27a051d3-c80a-43dd-91b2-cff3649b75b9",
+      "last_finite_epoch": 2,
+      "last_finite_prediction_loss": 0.005546617787331343,
+      "last_finite_sigreg_loss": 3.040583372116089,
+      "first_nonfinite_epoch": 3,
+      "outcome": "cancelled_and_replaced_with_lr_2.5e-5_clip_0.25"
+    }
   },
   "trained": {
     "TwoRoom": {
