@@ -166,13 +166,13 @@ def _(alt, mo, pd):
         )
         .properties(width=250, height=220)
         .facet(column=alt.Column("sweep:N", title=None))
-        .properties(title="Five-epoch PushT convergence snapshot (stopped on user request)")
+        .properties(title="Five-epoch PushT convergence snapshot at wrap-up")
     )
     mo.vstack(
         [
             mo.md("## Training convergence across parallel runs"),
             mo.ui.altair_chart(progress_chart),
-            mo.callout(mo.md("The three seeds remain tight after epoch 5 (0.00598–0.00641). SIGReg weight 0.05 gives the lowest prediction loss (0.00419), while 0.2–0.5 learns substantially more slowly. Dropout 0–0.2 is similar; dropout 0.5 trails. These PushT runs were stopped after five checkpoints when the user returned."), kind="info"),
+            mo.callout(mo.md("The three seeds remain tight after epoch 5 (0.00598–0.00641). SIGReg weight 0.05 gives the lowest prediction loss (0.00419), while 0.2–0.5 learns substantially more slowly. Dropout 0–0.2 is similar; dropout 0.5 trails. Cancellation was requested after these five completed checkpoints when the user returned."), kind="info"),
         ]
     )
     return
