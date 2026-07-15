@@ -155,6 +155,35 @@ def epoch1_ablation_figure(metrics: dict, output: Path) -> None:
     plt.close(fig)
 
 
+def collapse_trajectory_figure(metrics: dict, output: Path) -> None:
+    rows = metrics["epoch1_ablation_snapshot"]["lambda_zero_trajectory"]
+    epochs = [row["epoch"] for row in rows]
+    pred = [row["prediction_loss"] for row in rows]
+    sigreg = [row["sigreg_loss"] for row in rows]
+    fig, ax = plt.subplots(figsize=(9.8, 4.8), constrained_layout=True)
+    ax.plot(epochs, pred, marker="o", linewidth=2.5, color="#345cdb", label="Prediction loss")
+    ax.plot(epochs, sigreg, marker="s", linewidth=2.5, color="#c94f6d", label="SIGReg diagnostic")
+    ax.set(
+        xticks=epochs,
+        xlabel="Completed epoch (0 = initialization)",
+        ylabel="Held-out validation value (log scale)",
+        yscale="log",
+        title="Prediction-only training collapses instead of learning world state",
+    )
+    ax.grid(color="#dedbd4", linewidth=0.7)
+    ax.legend(frameon=False, loc="center right")
+    ax.annotate(
+        "prediction error falls 12,826×",
+        xy=(3, pred[-1]),
+        xytext=(1.15, 0.0015),
+        arrowprops={"arrowstyle": "->", "color": "#596273"},
+        color="#2d3440",
+    )
+    ax.annotate("latent regularity stays at 51.49", xy=(2.9, sigreg[-1]), xytext=(1.2, 18), color="#2d3440")
+    fig.savefig(output, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--metrics", type=Path, default=Path("analysis/reproduction_metrics.json"))
@@ -167,6 +196,7 @@ def main() -> None:
     diagnostics_figure(metrics, args.output / "latent-diagnostics.png")
     surprise_figure(metrics, args.output / "offline-surprise.png")
     epoch1_ablation_figure(metrics, args.output / "epoch1-ablation.png")
+    collapse_trajectory_figure(metrics, args.output / "collapse-trajectory.png")
 
 
 if __name__ == "__main__":

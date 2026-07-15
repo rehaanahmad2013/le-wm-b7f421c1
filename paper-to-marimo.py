@@ -56,7 +56,42 @@ def _(alt, mo, pd):
         [
             mo.md("## Early ablation signal"),
             mo.ui.altair_chart(ablation_chart),
-            mo.callout(mo.md("λ=0 collapses: prediction loss reaches 6.25×10⁻⁵ while the SIGReg diagnostic stays at 51.49. λ=0.01 minimizes one-epoch prediction loss but becomes non-finite in epoch 3 at the paper learning rate; its stabilized rerun uses half the learning rate and tighter clipping. λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="warn"),
+            mo.callout(mo.md("λ=0 collapses: prediction loss reaches 6.25×10⁻⁵ after one epoch and 5.34×10⁻⁶ after three, while the SIGReg diagnostic stays at 51.49. λ=0.01 minimizes one-epoch prediction loss but becomes non-finite in epoch 3 at the paper learning rate; its stabilized rerun uses half the learning rate and tighter clipping. λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="warn"),
+        ]
+    )
+    return
+
+
+@app.cell
+def _(alt, mo, pd):
+    collapse = pd.DataFrame(
+        [
+            {"epoch": 0, "metric": "Prediction loss", "value": 0.06849},
+            {"epoch": 1, "metric": "Prediction loss", "value": 0.0000624628},
+            {"epoch": 2, "metric": "Prediction loss", "value": 0.00000992368},
+            {"epoch": 3, "metric": "Prediction loss", "value": 0.00000533978},
+            {"epoch": 0, "metric": "SIGReg diagnostic", "value": 55.5},
+            {"epoch": 1, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 2, "metric": "SIGReg diagnostic", "value": 51.4943},
+            {"epoch": 3, "metric": "SIGReg diagnostic", "value": 51.4943},
+        ]
+    )
+    collapse_chart = (
+        alt.Chart(collapse)
+        .mark_line(point=True, strokeWidth=3)
+        .encode(
+            x=alt.X("epoch:Q", title="Completed epoch", axis=alt.Axis(tickMinStep=1)),
+            y=alt.Y("value:Q", title=None, scale=alt.Scale(type="log")),
+            color=alt.Color("metric:N", title=None),
+            tooltip=["metric:N", "epoch:Q", alt.Tooltip("value:Q", format=".6g")],
+        )
+        .properties(width=640, height=260, title="Prediction-only training converges to a collapsed latent")
+    )
+    mo.vstack(
+        [
+            mo.md("## Collapse trajectory"),
+            mo.ui.altair_chart(collapse_chart),
+            mo.md("Prediction error falls by **12,826×** from initialization through epoch 3, but the held-out SIGReg diagnostic remains **51.49** instead of approaching the Gaussian target. Low prediction error alone is therefore not evidence of a useful world model."),
         ]
     )
     return

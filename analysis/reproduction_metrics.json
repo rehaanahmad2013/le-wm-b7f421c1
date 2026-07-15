@@ -36,7 +36,12 @@
       {"value": 0.2, "prediction_loss": 0.025896728038787842, "sigreg_loss": 2.1558022499084473},
       {"value": 0.5, "prediction_loss": 0.02446717955172062, "sigreg_loss": 2.074491262435913}
     ],
-    "lambda_zero_epoch2": {"prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695},
+    "lambda_zero_trajectory": [
+      {"epoch": 0, "prediction_loss": 0.06849, "sigreg_loss": 55.5},
+      {"epoch": 1, "prediction_loss": 0.00006246277189347893, "sigreg_loss": 51.49431228637695},
+      {"epoch": 2, "prediction_loss": 0.000009923678589984775, "sigreg_loss": 51.49431228637695},
+      {"epoch": 3, "prediction_loss": 0.000005339779818314128, "sigreg_loss": 51.49431228637695}
+    ],
     "lambda_001_instability": {
       "run_id": "27a051d3-c80a-43dd-91b2-cff3649b75b9",
       "last_finite_epoch": 2,
