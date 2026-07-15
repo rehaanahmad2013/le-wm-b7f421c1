@@ -1,5 +1,5 @@
 {
-  "name": "pusht-lambda-0.01",
+  "name": "pusht-lambda-0.01-stable",
   "mode": "train",
   "environment": "pusht",
   "seed": 3072,
