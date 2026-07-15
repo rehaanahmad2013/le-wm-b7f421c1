@@ -16,6 +16,18 @@
   <img src="assets/lewm.gif" width="80%">
 </p>
 
+## Independent 16-GPU reproduction
+
+This branch contains an evidence-linked reproduction of arXiv:2603.19312 on a
+16-GPU Kubernetes cluster:
+
+- [Full reproduction report](FULL_REPRODUCTION.md), including control confidence
+  intervals, latent diagnostics, state probes, intervention tests, and ablations.
+- [Executable Marimo companion](paper-to-marimo.py) with interactive charts and
+  a [short running guide](PAPER_TO_MARIMO.md).
+- [Machine-readable metrics](analysis/reproduction_metrics.json) and the
+  [figure generator](analysis/make_report_figures.py).
+
 If you find this code useful, please reference it in your paper:
 ```
 @article{maes_lelidec2026lewm,
