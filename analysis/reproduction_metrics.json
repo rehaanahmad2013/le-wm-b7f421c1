@@ -52,6 +52,21 @@
       "normal_surprise": 0.006533389445394278,
       "visual_surprise": 1.8689076900482178,
       "teleport_surprise": 1.9802567958831787
+    },
+    "Cube": {
+      "run_id": "7e9fd669-b5ee-461d-8578-8bf6eac91c63",
+      "success_rate": 74.0,
+      "successes": 37,
+      "trials": 50,
+      "evaluation_seconds": 76.62476325035095,
+      "one_step_mse": 0.004270263947546482,
+      "covariance_diag_mean": 1.0099807977676392,
+      "effective_rank": 108.62680053710938,
+      "linear_probe_r": 0.4923437279578418,
+      "mlp_probe_r": 0.4613570211569654,
+      "normal_surprise": 0.004270263947546482,
+      "visual_surprise": 1.604681372642517,
+      "teleport_surprise": 2.018235206604004
     }
   }
 }
