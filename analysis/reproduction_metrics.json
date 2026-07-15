@@ -20,6 +20,22 @@
     "control_success_rate": 20.0,
     "control_trials": 5
   },
+  "epoch1_ablation_snapshot": {
+    "sigreg_weight": [
+      {"value": 0.01, "prediction_loss": 0.012690960429608822, "sigreg_loss": 4.615327835083008},
+      {"value": 0.05, "prediction_loss": 0.016102170571684837, "sigreg_loss": 2.259392738342285},
+      {"value": 0.09, "prediction_loss": 0.025064809247851372, "sigreg_loss": 2.3142645359039307},
+      {"value": 0.10, "prediction_loss": 0.025153737515211105, "sigreg_loss": 2.1534011363983154},
+      {"value": 0.20, "prediction_loss": 0.06551814079284668, "sigreg_loss": 3.2960174083709717},
+      {"value": 0.50, "prediction_loss": 0.15678462386131287, "sigreg_loss": 9.410572052001953}
+    ],
+    "predictor_dropout": [
+      {"value": 0.0, "prediction_loss": 0.022016694769263268, "sigreg_loss": 1.9751087427139282},
+      {"value": 0.1, "prediction_loss": 0.025064809247851372, "sigreg_loss": 2.3142645359039307},
+      {"value": 0.2, "prediction_loss": 0.025896728038787842, "sigreg_loss": 2.1558022499084473},
+      {"value": 0.5, "prediction_loss": 0.02446717955172062, "sigreg_loss": 2.074491262435913}
+    ]
+  },
   "reproduced": {
     "PushT": {
       "run_id": "db4d0e7d-1397-4013-8710-3c40e0dd6e4c",

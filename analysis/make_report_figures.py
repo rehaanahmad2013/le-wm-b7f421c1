@@ -119,6 +119,30 @@ def surprise_figure(metrics: dict, output: Path) -> None:
     plt.close(fig)
 
 
+def epoch1_ablation_figure(metrics: dict, output: Path) -> None:
+    snapshot = metrics["epoch1_ablation_snapshot"]
+    fig, axes = plt.subplots(2, 2, figsize=(11.5, 7.2), constrained_layout=True)
+    specs = [
+        ("sigreg_weight", "SIGReg weight λ", "#345cdb"),
+        ("predictor_dropout", "Predictor dropout", "#e7834a"),
+    ]
+    for col, (key, xlabel, color) in enumerate(specs):
+        rows = snapshot[key]
+        x = [row["value"] for row in rows]
+        pred = [row["prediction_loss"] for row in rows]
+        sigreg = [row["sigreg_loss"] for row in rows]
+        axes[0, col].plot(x, pred, marker="o", linewidth=2.2, color=color)
+        axes[0, col].set(xlabel=xlabel, ylabel="Validation prediction loss", title=f"Prediction vs {xlabel.lower()}")
+        axes[1, col].plot(x, sigreg, marker="s", linewidth=2.2, color=color)
+        axes[1, col].set(xlabel=xlabel, ylabel="Validation SIGReg diagnostic", title=f"Gaussianization vs {xlabel.lower()}")
+        for ax in axes[:, col]:
+            ax.grid(color="#dedbd4", linewidth=0.7)
+            ax.set_xticks(x)
+    fig.suptitle("After one epoch: regularization trade-offs", x=0.01, ha="left", fontweight="bold", fontsize=14)
+    fig.savefig(output, dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--metrics", type=Path, default=Path("analysis/reproduction_metrics.json"))
@@ -130,6 +154,7 @@ def main() -> None:
     control_figure(metrics, args.output / "control-reproduction.png")
     diagnostics_figure(metrics, args.output / "latent-diagnostics.png")
     surprise_figure(metrics, args.output / "offline-surprise.png")
+    epoch1_ablation_figure(metrics, args.output / "epoch1-ablation.png")
 
 
 if __name__ == "__main__":

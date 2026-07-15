@@ -16,6 +16,52 @@ def _():
 
 
 @app.cell
+def _(alt, mo, pd):
+    ablation = pd.DataFrame(
+        [
+            ["SIGReg weight", 0.01, 0.012691, 4.6153],
+            ["SIGReg weight", 0.05, 0.016102, 2.2594],
+            ["SIGReg weight", 0.09, 0.025065, 2.3143],
+            ["SIGReg weight", 0.10, 0.025154, 2.1534],
+            ["SIGReg weight", 0.20, 0.065518, 3.2960],
+            ["SIGReg weight", 0.50, 0.156785, 9.4106],
+            ["Predictor dropout", 0.00, 0.022017, 1.9751],
+            ["Predictor dropout", 0.10, 0.025065, 2.3143],
+            ["Predictor dropout", 0.20, 0.025897, 2.1558],
+            ["Predictor dropout", 0.50, 0.024467, 2.0745],
+        ],
+        columns=["sweep", "value", "prediction_loss", "sigreg_loss"],
+    )
+    ablation_long = ablation.melt(
+        id_vars=["sweep", "value"],
+        value_vars=["prediction_loss", "sigreg_loss"],
+        var_name="metric",
+        value_name="validation_value",
+    )
+    ablation_chart = (
+        alt.Chart(ablation_long)
+        .mark_line(point=True)
+        .encode(
+            x=alt.X("value:Q", title="Hyperparameter value"),
+            y=alt.Y("validation_value:Q", title=None),
+            color=alt.Color("metric:N", title=None),
+            tooltip=["sweep:N", "metric:N", "value:Q", alt.Tooltip("validation_value:Q", format=".5f")],
+        )
+        .properties(width=300, height=210)
+        .facet(column=alt.Column("sweep:N", title=None))
+        .properties(title="One-epoch regularization frontier")
+    )
+    mo.vstack(
+        [
+            mo.md("## Early ablation signal"),
+            mo.ui.altair_chart(ablation_chart),
+            mo.callout(mo.md("λ=0.01 minimizes one-epoch prediction loss but leaves a larger SIGReg residual; λ≈0.05–0.10 is the early balance region. Dropout has much smaller first-epoch effects."), kind="info"),
+        ]
+    )
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(
         r"""
