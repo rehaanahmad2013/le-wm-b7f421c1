@@ -28,7 +28,8 @@ action_encoder:
 
 projector:
   _target_: module.MLP
-  input_dim: ${embed_dim}
+  # ViT-Tiny always emits 192 features; only the learned latent varies.
+  input_dim: 192
   output_dim: ${embed_dim}
   hidden_dim: 2048
   norm_fn:
